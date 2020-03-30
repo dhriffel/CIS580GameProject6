@@ -12,7 +12,7 @@ namespace CIS580GameProject6
     /// A delegate for spawning particles
     /// </summary>
     /// <param name="particle">The particle to spawn</param>
-    public delegate void ParticleSpawner(ref Particle particle, ref Vector2 emmitter);
+    public delegate void ParticleSpawner(ref Particle particle, Vector2 emmitter);
 
     /// <summary>
     /// A delegate for updating particles
@@ -26,7 +26,7 @@ namespace CIS580GameProject6
         /// <summary>
         /// The collection of particles 
         /// </summary>
-        Particle[] particles;
+        public Particle[] particles;
 
         /// <summary>
         /// The texture this particle system uses 
@@ -46,7 +46,7 @@ namespace CIS580GameProject6
         /// <summary>
         /// The emitter location for this particle system 
         /// </summary>
-        public Vector2[] Emitter { get; set; }
+        public List<Vector2> Emitter { get; set; }
 
         /// <summary>
         /// The rate of particle spawning 
@@ -56,7 +56,7 @@ namespace CIS580GameProject6
         /// <summary>
         /// The next index in the particles array to use when spawning a particle
         /// </summary>
-        int nextIndex = 0;
+        public int nextIndex = 0;
 
         /// <summary>
         /// Holds a delegate to use when spawning a new particle
@@ -68,6 +68,10 @@ namespace CIS580GameProject6
         /// </summary>
         /// <param name="particle"></param>
         public ParticleUpdater UpdateParticle { get; set; }
+
+        public int life;
+
+        public Vector2 oldEmmitter;
 
 
         /// <summary>
@@ -81,7 +85,8 @@ namespace CIS580GameProject6
             this.particles = new Particle[size];
             this.spriteBatch = new SpriteBatch(graphicsDevice);
             this.texture = texture;
-            Emitter = new Vector2[100];
+            this.Emitter = new List<Vector2>();
+            oldEmmitter = new Vector2();
         }
 
         /// <summary> 
@@ -99,13 +104,13 @@ namespace CIS580GameProject6
             // Make sure our delegate properties are set
             if (SpawnParticle == null || UpdateParticle == null) return;
 
-            for (int i = 0; i < 1; i++)
+            foreach(Vector2 emmitter in Emitter)
             {
                 // Part 1: Spawn new particles 
                 for (int j = 0; j < SpawnPerFrame; j++)
                 {
                     // Create the particle
-                    SpawnParticle(ref particles[nextIndex], ref Emitter[i]);
+                    SpawnParticle(ref particles[nextIndex], emmitter);
 
                     // Advance the index 
                     nextIndex++;

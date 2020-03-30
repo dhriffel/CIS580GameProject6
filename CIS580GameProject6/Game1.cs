@@ -33,12 +33,7 @@ namespace CIS580GameProject6
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            particleEngine = new ParticleEngine();
-            floor = new PhysicsRectangle(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height), GraphicsDevice.Viewport.Width, 50);
-
-            testTank = new TankPlayer(this, new PhysicsRectangle(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 50 / 2), 50, 50));
-
-
+            
             base.Initialize();
         }
 
@@ -49,11 +44,15 @@ namespace CIS580GameProject6
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
+            particleEngine = new ParticleEngine();
+            floor = new PhysicsRectangle(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height), GraphicsDevice.Viewport.Width, 50);
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             particleEngine.LoadContent(GraphicsDevice, Content);
             debugTexture = Content.Load<Texture2D>("Pixel");
-            testTank.texture = debugTexture;
 
+            testTank = new TankPlayer(this, new PhysicsRectangle(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 50 / 2), 50, 50));
+            testTank.texture = debugTexture;
             // TODO: use this.Content to load your game content here
         }
 

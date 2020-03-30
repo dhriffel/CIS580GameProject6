@@ -17,6 +17,7 @@ namespace CIS580GameProject6
         /// </summary>
         public ParticleSystem rocketSystem;
         public ParticleSystem explosionSystem;
+        public ParticleSystem exhaustSystem;
         Random random = new Random();
 
         public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
@@ -25,22 +26,26 @@ namespace CIS580GameProject6
 
 
             rocketSystem = new ParticleSystem(graphicsDevice, 1000, particleTexture);
-            rocketSystem.Emitter[0] = new Vector2(100, 100);
             rocketSystem.SpawnPerFrame = 4;
 
             explosionSystem = new ParticleSystem(graphicsDevice, 1000, particleTexture);
-            rocketSystem.SpawnPerFrame = 1;
+            explosionSystem.SpawnPerFrame = 100;
+            explosionSystem.life = 1000;
+
+            exhaustSystem = new ParticleSystem(graphicsDevice, 1000, particleTexture);
+            exhaustSystem.SpawnPerFrame = 20;
 
             // Set the SpawnParticle method
-            rocketSystem.SpawnParticle = (ref Particle particle, ref Vector2 emmitter) =>
+            rocketSystem.SpawnParticle = (ref Particle particle, Vector2 emmitter) =>
             {
+                
                 particle.Position = emmitter;
                 particle.Velocity = new Vector2(
                     MathHelper.Lerp(-50, 50, (float)random.NextDouble()), // X between -50 and 50
                     MathHelper.Lerp(0, 100, (float)random.NextDouble()) // Y between 0 and 100
                     );
                 particle.Acceleration = 0.1f * new Vector2(0, (float)-random.NextDouble());
-                particle.Color = Color.Gold;
+                particle.Color = Color.Red;
                 particle.Scale = 1f;
                 particle.Life = 1.0f;
             };
@@ -55,20 +60,22 @@ namespace CIS580GameProject6
             };
 
             // Set the SpawnParticle method
-            explosionSystem.SpawnParticle = (ref Particle particle, ref Vector2 emmitter) =>
+            explosionSystem.SpawnParticle = (ref Particle particle, Vector2 emmitter) =>
             {
-                for (int i = 0; i < 100; i++)
+                if (explosionSystem.life > 0)
                 {
                     particle.Position = emmitter;
                     particle.Velocity = new Vector2(
-                        MathHelper.Lerp(-50, 50, (float)random.NextDouble()), // X between -50 and 50
-                        MathHelper.Lerp(0, 100, (float)random.NextDouble()) // Y between 0 and 100
+                        MathHelper.Lerp(-1000, 1000, (float)random.NextDouble()), // X between -50 and 50
+                        MathHelper.Lerp(-1000, 1000, (float)random.NextDouble()) // Y between 0 and 100
                         );
                     particle.Acceleration = 0.1f * new Vector2(0, (float)-random.NextDouble());
-                    particle.Color = Color.Gold;
+                    particle.Color = Color.Orange;
                     particle.Scale = 1f;
-                    particle.Life = 1.0f;
+                    particle.Life = .4f;
+                    explosionSystem.life -= 1;
                 }
+                
             };
 
             // Set the UpdateParticle method
@@ -79,17 +86,49 @@ namespace CIS580GameProject6
                 particle.Scale -= deltaT;
                 particle.Life -= deltaT;
             };
+
+            exhaustSystem.SpawnParticle = (ref Particle particle, Vector2 emmitter) =>
+            {
+                if (emmitter != exhaustSystem.oldEmmitter)
+                {
+                    particle.Position = emmitter;
+                    particle.Velocity = new Vector2(
+                        MathHelper.Lerp(-25, 25, (float)random.NextDouble()), // X between -50 and 50
+                        MathHelper.Lerp(-50, 0, (float)random.NextDouble()) // Y between 0 and 100
+                        );
+                    particle.Acceleration = 10f * new Vector2(0, (float)random.NextDouble());
+                    particle.Color = Color.Silver;
+                    particle.Scale = 1f;
+                    particle.Life = 2.0f;
+                    exhaustSystem.oldEmmitter = emmitter;
+                }
+            };
+
+            // Set the UpdateParticle method
+            exhaustSystem.UpdateParticle = (float deltaT, ref Particle particle) =>
+            {
+                particle.Velocity += deltaT * particle.Acceleration;
+                particle.Position += deltaT * particle.Velocity;
+                particle.Scale -= deltaT/2;
+                particle.Life -= deltaT;
+            };
         }
 
         public void Update(GameTime gameTime)
         {
             rocketSystem.Update(gameTime);
+            explosionSystem.Update(gameTime);
+            if (explosionSystem.life <= 0 && explosionSystem.Emitter.Count > 0)
+                explosionSystem.Emitter.RemoveAt(0);
+            exhaustSystem.Update(gameTime);
         }
                 
 
         public void Draw()
         {
             rocketSystem.Draw();
+            explosionSystem.Draw();
+            exhaustSystem.Draw();
         }
     }
 }

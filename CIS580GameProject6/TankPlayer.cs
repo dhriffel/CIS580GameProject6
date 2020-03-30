@@ -19,6 +19,8 @@ namespace CIS580GameProject6
         public PhysicsRectangle turretRectangle;
         Projectile bullet;
 
+        KeyboardState oldKeyboardState;
+
         public double turretDegrees = 270;
 
         
@@ -28,6 +30,8 @@ namespace CIS580GameProject6
             this.game = game;
             this.tankRectangle = tankRectangle;
             turretRectangle = new PhysicsRectangle(new Vector2(tankRectangle.origin.X, tankRectangle.origin.Y - tankRectangle.halfHeight), 15, 25);
+
+            game.particleEngine.exhaustSystem.Emitter.Add(tankRectangle.origin);
         }
 
         public void Update(GameTime gameTime)
@@ -57,9 +61,9 @@ namespace CIS580GameProject6
                 turretDegrees -= 0.5;
             }
 
-            if (keyboardState.IsKeyDown(Keys.Space))
+            if (keyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space) && !bullet.active)
             {
-                bullet = new Projectile(game, tankRectangle.origin, 20, 7, turretDegrees, texture);
+                bullet = new Projectile(game, turretRectangle.origin, 20, 7, turretDegrees, texture);
             }
 
             // Stop the paddle from going off-screen
@@ -84,6 +88,10 @@ namespace CIS580GameProject6
                 bullet.Update(gameTime);
 
             Debug.WriteLine(turretDegrees);
+
+            game.particleEngine.exhaustSystem.Emitter[0] = turretRectangle.origin;
+
+            oldKeyboardState = Keyboard.GetState();
         }
         public void Draw(SpriteBatch spriteBatch)
         {
