@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CIS580GameProject6", "CIS580GameProject6\CIS580GameProject6.csproj", "{3546DCF6-C555-49FE-85EF-095A15D7E8ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3546DCF6-C555-49FE-85EF-095A15D7E8ED}.Debug|x86.ActiveCfg = Debug|x86
+		{3546DCF6-C555-49FE-85EF-095A15D7E8ED}.Debug|x86.Build.0 = Debug|x86
+		{3546DCF6-C555-49FE-85EF-095A15D7E8ED}.Release|x86.ActiveCfg = Release|x86
+		{3546DCF6-C555-49FE-85EF-095A15D7E8ED}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A73455A4-D59F-4CD0-A94B-5B3C9FF42CFA}
+	EndGlobalSection
+EndGlobal
